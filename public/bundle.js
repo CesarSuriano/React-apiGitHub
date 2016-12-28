@@ -21562,6 +21562,11 @@
 	    }
 	});
 
+	SearchUser.propTypes = {
+	    updateUser: React.PropTypes.func.isRequired,
+	    updateRepos: React.PropTypes.func.isRequired
+	};
+
 	module.exports = SearchUser;
 
 /***/ },
@@ -23076,49 +23081,136 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var UserRepos = __webpack_require__(207);
 
 	function UserInfo(props) {
 	    var userInfo = props.user ? React.createElement(
-	        "div",
-	        { className: "row" },
+	        'div',
+	        { className: 'row' },
 	        React.createElement(
-	            "div",
-	            { className: "col-lg-4" },
-	            React.createElement("img", { src: props.user.avatar_url, className: "img-circle", alt: "avatar", width: "140", height: "140" }),
+	            'div',
+	            { className: 'col-lg-4 col-md-4 col-xs-12' },
+	            React.createElement('img', { src: props.user.avatar_url, className: 'img-circle', alt: 'avatar', width: '140', height: '140' }),
 	            React.createElement(
-	                "h2",
+	                'h2',
 	                null,
 	                props.user.login
 	            ),
 	            React.createElement(
-	                "p",
+	                'p',
 	                null,
 	                props.user.name
 	            ),
 	            React.createElement(
-	                "p",
+	                'p',
 	                null,
-	                "Seguidores: ",
+	                'Seguidores: ',
 	                props.user.followers,
-	                " / Seguindo: ",
+	                ' / Seguindo: ',
 	                props.user.following
 	            ),
 	            React.createElement(
-	                "p",
+	                'p',
 	                null,
 	                React.createElement(
-	                    "a",
-	                    { className: "btn btn-default", href: props.user.url, role: "button" },
-	                    "Ver detalhes"
+	                    'a',
+	                    { className: 'btn btn-default', href: props.user.url, role: 'button' },
+	                    'Ver detalhes'
 	                )
 	            )
+	        ),
+	        React.createElement(
+	            'div',
+	            { className: 'col-lg-8 col-md-8 col-xs-12' },
+	            React.createElement(UserRepos, { repos: props.repos })
 	        )
 	    ) : null;
 
 	    return userInfo;
 	}
 
+	UserInfo.propTypes = {
+	    user: React.PropTypes.object,
+	    repos: React.PropTypes.array
+	};
+
 	module.exports = UserInfo;
+
+/***/ },
+/* 207 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var UserRepos = React.createClass({
+	    displayName: "UserRepos",
+
+	    getInitialState: function () {
+	        return {
+	            reposCount: 0
+	        };
+	    },
+	    componentWillReceiveProps: function (props) {
+	        this.setState({ reposCount: props.repos.length });
+	    },
+	    render: function () {
+	        var repos = this.props.repos.map(function (repo, key) {
+	            return React.createElement(
+	                "div",
+	                { key: key, className: "thumbnail" },
+	                React.createElement(
+	                    "div",
+	                    { className: "caption" },
+	                    React.createElement(
+	                        "h3",
+	                        null,
+	                        repo.name,
+	                        React.createElement(
+	                            "span",
+	                            { className: "badge" },
+	                            " ",
+	                            repo.stargazers_count,
+	                            " STARS"
+	                        )
+	                    ),
+	                    React.createElement(
+	                        "p",
+	                        null,
+	                        repo.description
+	                    ),
+	                    React.createElement(
+	                        "p",
+	                        null,
+	                        React.createElement(
+	                            "a",
+	                            { href: repo.html_url, className: "btn btn-primary", role: "button" },
+	                            "Reposit\xF3rio"
+	                        ),
+	                        React.createElement(
+	                            "a",
+	                            { href: repo.html_url + '/issues', className: "btn btn-default", role: "button" },
+	                            "Issues"
+	                        )
+	                    )
+	                )
+	            );
+	        });
+
+	        return React.createElement(
+	            "div",
+	            null,
+	            React.createElement(
+	                "h2",
+	                null,
+	                this.state.reposCount,
+	                " Reposit\xF3rios"
+	            ),
+	            repos
+	        );
+	    }
+	});
+
+	module.exports = UserRepos;
 
 /***/ }
 /******/ ]);

@@ -1,0 +1,20 @@
+var React = require('react');
+
+function UserInfo(props){
+    var userInfo = props.user ?
+    (
+        <div className="row">
+            <div className="col-lg-4">
+                <img src={props.user.avatar_url} className="img-circle" alt="avatar" width="140" height="140" />
+                <h2>{props.user.login}</h2>
+                <p>{props.user.name}</p>
+                <p>Seguidores: {props.user.followers} / Seguindo: {props.user.following}</p>
+                <p><a className="btn btn-default" href={props.user.url} role="button">Ver detalhes</a></p>
+            </div>
+        </div>
+    ) : null;
+
+    return userInfo;
+}
+
+module.exports = UserInfo;

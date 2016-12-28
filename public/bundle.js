@@ -21469,15 +21469,35 @@
 
 	var React = __webpack_require__(1);
 	var SearchUser = __webpack_require__(179);
+	var UserInfo = __webpack_require__(206);
 
 	var GitHub = React.createClass({
 	    displayName: "GitHub",
 
+	    getInitialState: function () {
+	        return {
+	            user: null,
+	            repos: []
+	        };
+	    },
+	    updateUser: function (user) {
+	        this.setState({ user: user });
+	    },
+	    updateRepos(repos) {
+	        this.setState({ repos: repos });
+	    },
 	    render: function () {
 	        return React.createElement(
 	            "div",
 	            { className: "container" },
-	            React.createElement(SearchUser, null)
+	            React.createElement(SearchUser, {
+	                updateUser: this.updateUser,
+	                updateRepos: this.updateRepos
+	            }),
+	            React.createElement(UserInfo, {
+	                user: this.state.user,
+	                repos: this.state.repos
+	            })
 	        );
 	    }
 	});
@@ -21495,15 +21515,16 @@
 	    displayName: 'SearchUser',
 
 	    handleSubmit: function (e) {
+
 	        e.preventDefault();
 
 	        GitHubUser.getByUsername(this.refs.username.value).then(function (response) {
-	            console.log(response);
-	        });
+	            this.props.updateUser(response.data);
+	        }.bind(this));
 
 	        GitHubUser.getReposByUsername(this.refs.username.value).then(function (response) {
-	            console.log(response);
-	        });
+	            this.props.updateRepos(response.data);
+	        }.bind(this));
 	    },
 	    render: function () {
 	        return React.createElement(
@@ -23049,6 +23070,55 @@
 	  };
 	};
 
+
+/***/ },
+/* 206 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	function UserInfo(props) {
+	    var userInfo = props.user ? React.createElement(
+	        "div",
+	        { className: "row" },
+	        React.createElement(
+	            "div",
+	            { className: "col-lg-4" },
+	            React.createElement("img", { src: props.user.avatar_url, className: "img-circle", alt: "avatar", width: "140", height: "140" }),
+	            React.createElement(
+	                "h2",
+	                null,
+	                props.user.login
+	            ),
+	            React.createElement(
+	                "p",
+	                null,
+	                props.user.name
+	            ),
+	            React.createElement(
+	                "p",
+	                null,
+	                "Seguidores: ",
+	                props.user.followers,
+	                " / Seguindo: ",
+	                props.user.following
+	            ),
+	            React.createElement(
+	                "p",
+	                null,
+	                React.createElement(
+	                    "a",
+	                    { className: "btn btn-default", href: props.user.url, role: "button" },
+	                    "Ver detalhes"
+	                )
+	            )
+	        )
+	    ) : null;
+
+	    return userInfo;
+	}
+
+	module.exports = UserInfo;
 
 /***/ }
 /******/ ]);
